@@ -25,14 +25,15 @@ class QGLBegin : public QOpenGLWidget
 public:
     explicit QGLBegin(QWidget *parent = 0);
     void setRotation(float x, float y, float z);
+    void parseObjFile(const QString &fileName,
+                      QStringList &comments,
+                      QVector<QOpenGLTriangle3D> &triangles);
 
 protected:
     void initializeGL();
     void paintGL();
     void resizeGL(int width, int height);
-    void parseObjFile(const QString &fileName,
-                      QStringList &comments,
-                      QVector<QOpenGLTriangle3D> &triangles);
+
 
 
 private:

@@ -19,6 +19,7 @@ private:
     Ui::MainWindow *ui;
 
 private slots:
+    void on_btnOpenFile_clicked();
     void on_x_rot_slider_valueChanged(int value);
     void on_y_rot_slider_valueChanged(int value);
     void on_z_rot_slider_valueChanged(int value);
