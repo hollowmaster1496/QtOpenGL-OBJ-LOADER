@@ -3,6 +3,7 @@
 
 #include <QtWidgets>
 #include<qopengl.h>
+#include<QTextStream>
 
 struct QOpenGLTriangle3D
 {
@@ -28,7 +29,6 @@ public:
     void parseObjFile(const QString &fileName,
                       QStringList &comments,
                       QVector<QOpenGLTriangle3D> &triangles);
-
 protected:
     void initializeGL();
     void paintGL();

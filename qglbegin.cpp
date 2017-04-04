@@ -1,5 +1,6 @@
 /* Credits: Amin Ahmadi
- * http://amin-ahmadi.com/2016/05/24/opengl-qt-beginners-example-project/*/
+ * http://amin-ahmadi.com/2016/05/24/opengl-qt-beginners-example-project/
+ */
 
 #include "qglbegin.h"
 
@@ -66,13 +67,19 @@ void QGLBegin::parseObjFile(const QString &fileName,
     QFile file(fileName);
     if(file.exists())
     {
+        qDebug() << "blahs";
+        printf("file exists \n");
+
         if(file.open(QFile::ReadOnly | QFile::Text))
         {
             QVector<QVector3D> v, vn;
             QVector<QVector2D> vt;
 
+            printf("File open \n");
+
             while(!file.atEnd())
             {
+
                 QString line = file.readLine().trimmed();
                 QStringList lineParts = line.split('\\s+');
                 if(lineParts.count() > 0)
@@ -137,6 +144,10 @@ void QGLBegin::parseObjFile(const QString &fileName,
             }
 
             file.close();
+
+            printf("Triangles \n", triangles.data()->p1);
         }
+
+
     }
 }

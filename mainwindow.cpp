@@ -16,10 +16,14 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_btnOpenFile_clicked()
 {
+    printf("Opening file \n");
+
     QString strFileName = QFileDialog::getOpenFileName();       // bring up open file dialog
     QStringList comments;
     QVector<QOpenGLTriangle3D> funny;
 
+    printf("Reached here: \n");
+    //printf(strFileName);
 
     if(strFileName == "") {                                     // if file was not chosen
         ui->lblChosenFile->setText("file not chosen");          // update label

@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTextStream>
 
 namespace Ui {
 class MainWindow;
