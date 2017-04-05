@@ -216,6 +216,17 @@ void QGLBegin::parseObjFile(const QString &fileName,
 
             file.close();
 
+            qDebug() << "Triangles \n" << triangles.data()->p1;
+            qDebug() << "Triangles \n" << triangles.data()->p2;
+            qDebug() << "Triangles \n" << triangles.data()->p3;
+
+            qDebug() << "Triangles \n" << triangles.data()->p1UV;
+            qDebug() << "Triangles \n" << triangles.data()->p2UV;
+            qDebug() << "Triangles \n" << triangles.data()->p3UV;
+
+            qDebug() << "Triangles \n" << triangles.data()->p1Normal;
+            qDebug() << "Triangles \n" << triangles.data()->p2Normal;
+            qDebug() << "Triangles \n" << triangles.data()->p3Normal;
         }
 
 
