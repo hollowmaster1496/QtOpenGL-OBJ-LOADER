@@ -11,10 +11,9 @@ QGLBegin::QGLBegin(QWidget *parent) : QOpenGLWidget(parent)
 
 void QGLBegin::initializeGL()
 {
-    glClearColor(0.0, 0.0, 0.0, 0.0);
-
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
+    glEnable(GL_DEPTH_TEST);
+    glShadeModel(GL_FLAT);
+    glDisable(GL_CULL_FACE);
 }
 
 void QGLBegin::paintGL()
