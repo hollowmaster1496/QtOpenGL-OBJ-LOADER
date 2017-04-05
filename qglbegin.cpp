@@ -36,6 +36,43 @@ void QGLBegin::initializeGL()
 
     QOpenGLWidget::initializeGL();
 
+    m_shaderProgram.addShaderFromSourceCode(QOpenGLShader::Vertex,
+        QString::fromUtf8(
+            "#version 400\r\n"
+            "\r\n"
+            "layout (location = 0) in vec3 coordVertexes;\r\n"
+            "layout (location = 1) in vec3 coordNormals;\r\n"
+            "flat out float lightIntensity;\r\n"
+            "\r\n"
+            "uniform mat4 matrixVertex;\r\n"
+            "uniform mat4 matrixNormal;\r\n"
+            "\r\n"
+            "void main()\r\n"
+            "{\r\n"
+            "   gl_Position = matrixVertex * vec4(coordVertexes, 1.0);\r\n"
+            "   lightIntensity = abs((matrixNormal * vec4(coordNormals, 1.0)).z);\r\n"
+            "}"));
+    m_shaderProgram.addShaderFromSourceCode(QOpenGLShader::Fragment,
+        QString::fromUtf8(
+            "#version 400\r\n"
+            "\r\n"
+            "flat in float lightIntensity;\r\n"
+            "\r\n"
+            "layout (location = 0) out vec4 FragColor;\r\n"
+            "uniform vec3 fragmentColor;\r\n"
+            "\r\n"
+            "void main()\r\n"
+            "{\r\n"
+            "    FragColor = vec4(fragmentColor * lightIntensity, 1.0);\r\n"
+            "}"));
+    m_shaderProgram.link();
+    m_shaderProgram.bind();
+
+    m_coordVertex = m_shaderProgram.attributeLocation(QString::fromUtf8("coordVertexes"));
+    m_coordNormal = m_shaderProgram.attributeLocation(QString::fromUtf8("coordNormals"));
+    m_matrixVertex = m_shaderProgram.uniformLocation(QString::fromUtf8("matrixVertex"));
+    m_matrixNormal = m_shaderProgram.uniformLocation(QString::fromUtf8("matrixNormal"));
+    m_colorFragment = m_shaderProgram.uniformLocation(QString::fromUtf8("fragmentColor"));
 
     glEnable(GL_DEPTH_TEST);
     glShadeModel(GL_FLAT);
@@ -84,6 +121,16 @@ void QGLBegin::paintGL()
     QMatrix4x4 matrixVertex;
     GetMatrixTransform(matrixVertex, m_triangles);
 
+    // Set Shader Program object' parameters
+    m_shaderProgram.setUniformValue(m_matrixVertex, matrixVertex);
+    m_shaderProgram.setUniformValue(m_matrixNormal, m_matrixRotate);
+    QColor fragmentColor(0x00FF00);
+    m_shaderProgram.setUniformValue(m_colorFragment,
+        static_cast<GLfloat>(fragmentColor.red()) / 256.0f,
+        static_cast<GLfloat>(fragmentColor.green()) / 256.0f,
+        static_cast<GLfloat>(fragmentColor.blue()) / 256.0f);
+
+    QOpenGLFunctions funcs(QOpenGLContext::currentContext());
 
     // Vertex data
     glEnableClientState(GL_VERTEX_ARRAY);
