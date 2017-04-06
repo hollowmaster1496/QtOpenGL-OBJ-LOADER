@@ -239,21 +239,21 @@ void QGLBegin::parseObjFile(const QString &fileName,
                        QOpenGLTriangle3D triangle;
 
                         // get points from v array
-                        triangle.p1 = v.at(lineParts.at(1).split('//').at(0).toInt() - 1);
-                        triangle.p2 = v.at(lineParts.at(2).split('//').at(0).toInt() - 1);
-                        triangle.p3 = v.at(lineParts.at(3).split('//').at(0).toInt() - 1);
+                        triangle.p1 = v.at(lineParts.at(1).split("//").value(0).toInt() - 1);
+                        triangle.p2 = v.at(lineParts.at(2).split("//").at(0).toInt() - 1);
+                        triangle.p3 = v.at(lineParts.at(3).split("//").at(0).toInt() - 1);
 
                         if(vt.count() > 0) // check if really there are any UV coords
                         {
-                            triangle.p1UV = vt.at(lineParts.at(1).split('//').at(1).toInt() - 1);
-                            triangle.p2UV = vt.at(lineParts.at(2).split('//').at(1).toInt() - 1);
-                            triangle.p3UV = vt.at(lineParts.at(3).split('//').at(1).toInt() - 1);
+                            triangle.p1UV = vt.at(lineParts.at(1).split("//").at(1).toInt() - 1);
+                            triangle.p2UV = vt.at(lineParts.at(2).split("//").at(1).toInt() - 1);
+                            triangle.p3UV = vt.at(lineParts.at(3).split("//").at(1).toInt() - 1);
                         }
 
                         // get normals from vn array
-                        triangle.p1Normal = vn.at(lineParts.at(1).split('//').at(2).toInt() - 1);
-                        triangle.p2Normal = vn.at(lineParts.at(2).split('//').at(2).toInt() - 1);
-                        triangle.p3Normal = vn.at(lineParts.at(3).split('//').at(2).toInt() - 1);
+                        triangle.p1Normal = vn.at(lineParts.at(1).split("//").at(2).toInt() - 1);
+                        triangle.p2Normal = vn.at(lineParts.at(2).split("//").at(2).toInt() - 1);
+                        triangle.p3Normal = vn.at(lineParts.at(3).split("//").at(2).toInt() - 1);
 
                         triangles.append(triangle);
                     }
