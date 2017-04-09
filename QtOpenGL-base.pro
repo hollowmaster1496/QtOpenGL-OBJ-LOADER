@@ -37,3 +37,7 @@ HEADERS+= mainwindow.h\
 FORMS+= mainwindow.ui
 
 LIBS += opengl32.lib
+
+RESOURCES += \
+    shaders.qrc
+

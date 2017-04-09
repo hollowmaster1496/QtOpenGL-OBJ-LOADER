@@ -205,16 +205,54 @@ void QGLBegin::GetMatrixTransform(QMatrix4x4 matrixVertex,
 
 }
 
+
+void QGLBegin::initShaders()
 {
+    // Override system locale until shaders are compiled
+    setlocale(LC_NUMERIC, "C");
+
+    qDebug() << "initshaders";
 
 
-    return pointCoord;
+    // Compile vertex shader
+    if (!m_shaderProgram.addShaderFromSourceFile(QGLShader::Vertex, ":/vshader.glsl"))
+        close();
 
+    // Compile fragment shader
+    if (!m_shaderProgram.addShaderFromSourceFile(QGLShader::Fragment, ":/fshader.glsl"))
+        close();
 
+    // Link shader pipeline
+    if (!m_shaderProgram.link())
+        close();
+
+    // Bind shader pipeline for use
+    if (!m_shaderProgram.bind())
+        close();
+
+    // Restore system locale
+    setlocale(LC_ALL, "");
 }
 
 
+void QGLBegin::initTextures()
 {
+    // Load cube.png image
+    glEnable(GL_TEXTURE_2D);
+    //texture = bindTexture(QImage(":/cube.png"));
+
+    //glBindTexture(QImage(":/cube.png"), texture);
+
+    // Set nearest filtering mode for texture minification
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    // Set bilinear filtering mode for texture magnification
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Wrap texture coordinates by repeating
+    // f.ex. texture coordinate (1.1, 1.2) is same as (0.1, 0.2)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
 
 
