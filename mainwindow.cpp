@@ -32,7 +32,7 @@ void MainWindow::on_btnOpenFile_clicked()
 
     ui->lblChosenFile->setText(strFileName);
 
-    ui->openGLWidget->parseObjFile(strFileName, comments, funny);
+    ui->openGLWidget->openFile(strFileName);
 
 }
 

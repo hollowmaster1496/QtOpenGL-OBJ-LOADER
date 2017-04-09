@@ -15,6 +15,12 @@ QGLBegin::~QGLBegin()
 }
 
 
+void QGLBegin::openFile(const QString &fileName)
+{
+    model.loadModel(fileName);
+}
+
+
 void QGLBegin::initializeGL()
 {
 

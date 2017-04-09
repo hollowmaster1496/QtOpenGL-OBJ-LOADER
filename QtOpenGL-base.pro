@@ -25,10 +25,14 @@ TEMPLATE = app
 
 SOURCES+= main.cpp\
           mainwindow.cpp\
-          qglbegin.cpp
+          qglbegin.cpp \
+          objloader.cpp \
+          modelengine.cpp
 
 HEADERS+= mainwindow.h\
-          qglbegin.h
+          qglbegin.h \
+          objloader.h \
+          modelengine.h
 
 FORMS+= mainwindow.ui
 

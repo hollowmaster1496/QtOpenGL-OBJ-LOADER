@@ -17,6 +17,8 @@ public:
     explicit QGLBegin(QWidget *parent = 0);
     ~QGLBegin();
     void setRotation(float x, float y, float z);
+    void openFile(const QString &fileName);
+
 protected:
     void initializeGL();
     void paintGL();
