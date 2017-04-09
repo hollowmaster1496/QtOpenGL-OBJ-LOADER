@@ -1,10 +1,13 @@
 #ifndef QGLBEGIN_H
 #define QGLBEGIN_H
 
+#include "modelengine.h"
+
 #include <QtWidgets>
 #include<qopengl.h>
 #include<QTextStream>
 
+class ModelEngine;
 
 class QGLBegin : public QOpenGLWidget
 {
@@ -12,6 +15,7 @@ class QGLBegin : public QOpenGLWidget
 
 public:
     explicit QGLBegin(QWidget *parent = 0);
+    ~QGLBegin();
     void setRotation(float x, float y, float z);
 protected:
     void initializeGL();
@@ -25,23 +29,14 @@ private:
     void GetMatrixTransform(QMatrix4x4 matrixVertex,
                             QVector<QOpenGLTriangle3D> triangles);
 
-    static float* GenerateVertexBuffer(const QVector<QOpenGLTriangle3D> triangles);
-    static void GenerateNormalsBuffer(const QVector<QOpenGLTriangle3D> triangles, float* coords);
-    static void ReleaseVertexBuffer(float* buffer);
+    QGLShaderProgram m_shaderProgram;
+    ModelEngine model;
+
+    GLuint texture;
+
+    QMatrix4x4 projection;
 
     float xrot,yrot,zrot;
-
-    QVector<QOpenGLTriangle3D> m_triangles;
-    GLuint m_vertexes;
-    GLuint m_normals;
-    QOpenGLShaderProgram m_shaderProgram;
-    int m_coordVertex;
-    int m_coordNormal;
-    int m_matrixVertex;
-    int m_matrixNormal;
-    int m_colorFragment;
-
-    QMatrix4x4  m_matrixRotate;
 
 };
 

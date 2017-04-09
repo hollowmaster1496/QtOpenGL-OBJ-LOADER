@@ -6,37 +6,21 @@
 
 QGLBegin::QGLBegin(QWidget *parent) : QOpenGLWidget(parent)
 {
-    xrot = yrot = zrot = 0.0;
+    xrot = yrot = zrot = 0.0; 
 }
+
+QGLBegin::~QGLBegin()
+{
+
+}
+
 
 void QGLBegin::initializeGL()
 {
-   /* glEnable(GL_DEPTH_TEST);
-    glShadeModel(GL_FLAT);
-    glDisable(GL_CULL_FACE);
-
-    // Get the Qt object which allows to operate with buffers
-    QOpenGLFunctions funcs(QOpenGLContext::currentContext());
-    GLuint handle;
-
-    // Create the buffer handle
-    funcs.glGenBuffers(1, &handle);
-    // Select buffer by its handle (so we’ll use this buffer
-    // further)
-    funcs.glBindBuffer(GL_ARRAY_BUFFER, handle);
-
-    // Copy data into the buffer. Being copied,
-    // source data is not used any more and can be released
-    funcs.glBufferData(GL_ARRAY_BUFFER,
-        sizeof m_triangles,
-        src_data,
-        GL_STATIC_DRAW);
-    // Tell the program we’ve finished with the handle
-    funcs.glBindBuffer(GL_ARRAY_BUFFER, 0); */
 
     QOpenGLWidget::initializeGL();
 
-    m_shaderProgram.addShaderFromSourceCode(QOpenGLShader::Vertex,
+    /*m_shaderProgram.addShaderFromSourceCode(QOpenGLShader::Vertex,
         QString::fromUtf8(
             "#version 400\r\n"
             "\r\n"
@@ -73,36 +57,25 @@ void QGLBegin::initializeGL()
     m_matrixVertex = m_shaderProgram.uniformLocation(QString::fromUtf8("matrixVertex"));
     m_matrixNormal = m_shaderProgram.uniformLocation(QString::fromUtf8("matrixNormal"));
     m_colorFragment = m_shaderProgram.uniformLocation(QString::fromUtf8("fragmentColor"));
+    */
+
+    QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
+           f->glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    initShaders();
+    initTextures();
 
     glEnable(GL_DEPTH_TEST);
-    glShadeModel(GL_FLAT);
-    glDisable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
+    //glShadeModel(GL_FLAT);
+    //glDisable(GL_CULL_FACE);
+
+
 }
+
 
 void QGLBegin::paintGL()
 {
-  /*  QOpenGLFunctions funcs(QOpenGLContext::currentContext());
-    // Vertex data
-    glEnableClientState(GL_VERTEX_ARRAY);
-    funcs.glBindBuffer(GL_ARRAY_BUFFER, m_triangles);
-
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glLoadIdentity();
-
-    glTranslatef(0.0, 0.0, -7.0);
-    glRotatef(xrot, 1.0, 0.0, 0.0);
-    glRotatef(yrot, 0.0, 1.0, 0.0);
-    glRotatef(zrot, 0.0, 0.0, 1.0);
-
-    glBegin(GL_QUADS);
-    glNormal3d(0,0,+1);
-    glVertex3d(-1,-1,0);
-    glVertex3d(-1,1,0);
-    glVertex3d(1,1,0);
-    glVertex3d(1,-1,0);
-    glEnd(); */
-
-    // Erase the scene
+    /* // Erase the scene
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Check whether the model exists
@@ -124,7 +97,7 @@ void QGLBegin::paintGL()
     // Set Shader Program object' parameters
     m_shaderProgram.setUniformValue(m_matrixVertex, matrixVertex);
     m_shaderProgram.setUniformValue(m_matrixNormal, m_matrixRotate);
-    QColor fragmentColor(0x00FF00);
+    QColor fragmentColor(0xFFFFFF);
     m_shaderProgram.setUniformValue(m_colorFragment,
         static_cast<GLfloat>(fragmentColor.red()) / 256.0f,
         static_cast<GLfloat>(fragmentColor.green()) / 256.0f,
@@ -151,9 +124,30 @@ void QGLBegin::paintGL()
     funcs.glDisableVertexAttribArray(m_coordNormal);
     funcs.glBindBuffer(GL_ARRAY_BUFFER, 0);
     glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_NORMAL_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY); */
+
+    qDebug() << "paintGL()";
+
+    // Clear color
+    QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
+            f->glClear(GL_COLOR_BUFFER_BIT);
+
+    // Calculate model view transformation
+    QMatrix4x4 matrix;
+    matrix.translate(0.0, 0.0, -5.0);
+    //matrix.rotate(rotation);
+
+    // Set modelview-projection matrix
+    m_shaderProgram.setUniformValue("mvp_matrix", projection * matrix);
+
+    // Use texture unit 0 which contains cube.png
+    //m_shaderProgram.setUniformValue("texture", 0);
+
+    // Draw cube geometry
+    //model.drawModel(&m_shaderProgram);
 
 }
+
 
 void QGLBegin::resizeGL(int width, int height)
 {
@@ -166,6 +160,7 @@ void QGLBegin::resizeGL(int width, int height)
     glMatrixMode(GL_MODELVIEW);
 }
 
+
 void QGLBegin::setRotation(float x, float y, float z)
 {
     xrot = x;
@@ -174,18 +169,6 @@ void QGLBegin::setRotation(float x, float y, float z)
     update();
 }
 
-
-
-
-void QGLBegin::FreeRenderData()
-{
-    QOpenGLFunctions funcs(QOpenGLContext::currentContext());
-    if(m_vertexes != 0)
-    {
-        funcs.glDeleteBuffers(1, &m_vertexes);
-        m_vertexes = 0;
-    }
-}
 
 void QGLBegin::GetMatrixTransform(QMatrix4x4 matrixVertex,
                         QVector<QOpenGLTriangle3D> triangles)
@@ -202,7 +185,7 @@ void QGLBegin::GetMatrixTransform(QMatrix4x4 matrixVertex,
 
      QMatrix4x4 matrixCenter;
      float centerX, centerY, centerZ;
-     centerX = 0.0f; centerY = 0.0f; centerZ = 1.0f;
+     centerX = 0.0f; centerY = 0.0f; centerZ = -1.0f;
      matrixCenter.translate(-centerX, -centerY, -centerZ);
 
      QMatrix4x4 matrixScale;
@@ -212,67 +195,20 @@ void QGLBegin::GetMatrixTransform(QMatrix4x4 matrixVertex,
      QMatrix4x4 matrixTranslateScene;
      matrixTranslateScene.translate(0.0f, 0.0f, -0.5f);
 
-     matrixVertex = matrixScaleScreen * matrixTranslateScene * matrixScale * m_matrixRotate * matrixCenter;
-
+     //matrixVertex = matrixScaleScreen * matrixTranslateScene * matrixScale * m_matrixRotate * matrixCenter;
 
 }
 
-float* QGLBegin::GenerateVertexBuffer(const QVector<QOpenGLTriangle3D> triangles)
 {
-    const unsigned int triangleCount = triangles.count();
-    float* pointCoord = new float[3 * 3 * triangleCount];
 
-    if(pointCoord != 0)
-    {
-        const unsigned int* indexes = new unsigned int[triangleCount * 3];
-        const float* pointCoordSrc = pointCoord;
-        float* coord = pointCoord;
-        for(unsigned int triangle = 0 ; triangle < triangleCount ; ++triangle)
-        {
-            for(unsigned int vertex = 0 ; vertex < 3 ; ++vertex, ++indexes)
-            {
-                const float* coordSrc = (pointCoordSrc + (3 * (*indexes)));
-                (*(coord++)) = (*(coordSrc++));
-                (*(coord++)) = (*(coordSrc++));
-                (*(coord++)) = (*(coordSrc++));
-            }
-        }
-    }
 
     return pointCoord;
+
+
 }
 
 
-void QGLBegin::GenerateNormalsBuffer(const QVector<QOpenGLTriangle3D> triangles, float* coords)
 {
-    const unsigned int triangleCount = triangles.count();
-    const unsigned int* indexes =  new unsigned int[triangleCount * 3];
-    const float* points =  new float[3 * 3 * triangleCount];
-    for(unsigned int triangle = 0 ; triangle < triangleCount ; ++triangle, indexes += 3)
-    {
-        const float* pointCoord1 = (points + (3 * indexes[0]));
-        const float* pointCoord2 = (points + (3 * indexes[1]));
-        const float* pointCoord3 = (points + (3 * indexes[2]));
-
-        QVector3D normal(QVector3D::crossProduct(
-            QVector3D((pointCoord2[0] - pointCoord1[0]), (pointCoord2[1] - pointCoord1[1]), (pointCoord2[2] - pointCoord1[2])),
-            QVector3D((pointCoord3[0] - pointCoord1[0]), (pointCoord3[1] - pointCoord1[1]), (pointCoord3[2] - pointCoord1[2])))
-                .normalized());
-
-        (*(coords++)) = normal[0];
-        (*(coords++)) = normal[1];
-        (*(coords++)) = normal[2];
-        (*(coords++)) = normal[0];
-        (*(coords++)) = normal[1];
-        (*(coords++)) = normal[2];
-        (*(coords++)) = normal[0];
-        (*(coords++)) = normal[1];
-        (*(coords++)) = normal[2];
-    }
 }
 
 
-void QGLBegin::ReleaseVertexBuffer(float* buffer)
-{
-    delete [] buffer;
-}
