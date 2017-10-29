@@ -140,17 +140,24 @@ void QGLBegin::paintGL()
 
     // Calculate model view transformation
     QMatrix4x4 matrix;
-    matrix.translate(0.0, 0.0, -5.0);
-    //matrix.rotate(rotation);
+    matrix.translate(0.0, 0.0, 0.0);
+    matrix.rotate(QQuaternion(1, xrot, yrot, zrot));
+
+    // Set modelview-projection matrix
+    //m_shaderProgram.setUniformValue("mvp_matrix", projection * matrix);
+
+    // Use texture unit 0 which contains cube.png
+    //m_shaderProgram.setUniformValue("texture", 0);
 
     // Set modelview-projection matrix
     m_shaderProgram.setUniformValue("mvp_matrix", projection * matrix);
 
     // Use texture unit 0 which contains cube.png
-    //m_shaderProgram.setUniformValue("texture", 0);
+    m_shaderProgram.setUniformValue("texture", 0);
 
     // Draw cube geometry
-    //model.drawModel(&m_shaderProgram);
+    if(model.loaded)
+        model.drawModel(&m_shaderProgram);  /*This line is resulting in issue 3 on first run*/
 
 }
 
@@ -201,7 +208,10 @@ void QGLBegin::GetMatrixTransform(QMatrix4x4 matrixVertex,
      QMatrix4x4 matrixTranslateScene;
      matrixTranslateScene.translate(0.0f, 0.0f, -0.5f);
 
-     //matrixVertex = matrixScaleScreen * matrixTranslateScene * matrixScale * m_matrixRotate * matrixCenter;
+     QMatrix4x4 matrixRotateScene;
+     matrixRotateScene.rotate(QQuaternion(1, xrot, yrot, zrot));
+
+     matrixVertex = matrixScaleScreen * matrixTranslateScene * matrixScale * matrixRotateScene * matrixCenter;
 
 }
 
