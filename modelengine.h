@@ -1,7 +1,7 @@
 #ifndef MODELENGINE_H
 #define MODELENGINE_H
 
-#include <QGLFunctions>
+#include <QOpenGLFunctions>
 #include <QGLShaderProgram>
 
 struct QOpenGLTriangle3D
@@ -17,8 +17,9 @@ QVector2D p2UV = QVector2D(0, 0);
 QVector2D p3UV = QVector2D(0, 0); */
 };
 
-class ModelEngine : public QGLFunctions
+class ModelEngine : public QOpenGLFunctions
 {
+    //Q_OBJECT
 public:
     ModelEngine();
     virtual ~ModelEngine();

@@ -6,7 +6,7 @@
 
 ModelEngine::ModelEngine()
 {
-
+    //init();
     loaded = false;
 }
 
@@ -19,13 +19,13 @@ ModelEngine::~ModelEngine()
 
 void ModelEngine::init()
 {
-    initializeGLFunctions();
+    //initializeGLFunctions();
+    //makeCurrent();
+    initializeOpenGLFunctions();
 
     // Generate VBO
     glGenBuffers(2, m_vboId);
 
-    // Initialize model geometry
-    initModel();
 }
 
 
@@ -41,7 +41,9 @@ void ModelEngine::loadModel(const QString &fileName)
         printf("file exists \n");
 
 
-        initializeGLFunctions();
+        //initializeGLFunctions();
+        //makeCurrent();
+        initializeOpenGLFunctions();
 
         // Generate VBO
         glGenBuffers(2, m_vboId);
